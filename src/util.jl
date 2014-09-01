@@ -10,5 +10,11 @@
 #     my_string = get_string(sb)    ->    "12345678910"
 ####
 StringBuilder = IOBuffer
+
 append(sb::StringBuilder,x) = print(sb,x)
-get_string(sb::StringBuilder) = takebuf_string(sb)
+
+function get_string(sb::StringBuilder)
+  sb.writable = false
+  data = takebuf_string(sb)
+  sb.writable = true
+end
