@@ -17,4 +17,5 @@ function get_string(sb::StringBuilder)
   sb.writable = false
   data = takebuf_string(sb)
   sb.writable = true
+  return data
 end
