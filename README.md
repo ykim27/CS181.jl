@@ -7,3 +7,7 @@ This package provides the code base for CS181 students using Julia.
 ```julia
 Pkg.clone("https://github.com/ykim27/CS181F2014.jl.git")
 ```
+
+Available subpackages:
+
+- Alignment (CS181F2014.Alignment)
