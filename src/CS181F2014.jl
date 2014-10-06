@@ -7,5 +7,6 @@ module CS181F2014
 	# Julia files
 	include("util.jl")
 	include("alignment/Alignment.jl")
+	include("labeledgraph/LabeledGraphs.jl")
 
 end
