@@ -60,8 +60,10 @@ module LabeledGraphs
         sparse2adjacencylist,
 
         # labeled_graph
-        
         LabeledGraph,
+        add_edge_property!,
+        set_edge_property!,
+        get_edge_property,
         
         # graph_visit
         AbstractGraphVisitor, TrivialGraphVisitor, LogGraphVisitor,
