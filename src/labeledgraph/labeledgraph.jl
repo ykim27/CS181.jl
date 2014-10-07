@@ -212,9 +212,9 @@ function to_dot(graph::LabeledGraph, stream::IO, with_weight::ASCIIString="")
                 
                 if with_weight != ""
                     weight = get_edge_property(graph,vertex,n,with_weight)
-                    write(stream,"[ label=\"$(weight)\" ]")
+                    write(stream," [ label=\"$(weight)\" ]")
                 end
-                write(stream, "\n")
+                write(stream, ";\n")
             end
         end
     else
