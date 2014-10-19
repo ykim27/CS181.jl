@@ -208,13 +208,12 @@ function to_dot(graph::LabeledGraph, stream::IO, with_weight::ASCIIString="")
             for n in out_neighbors(vertex, graph)
                 if is_directed(graph) || vertex_index(n, graph) > vertex_index(vertex, graph)
                     write(stream,"$(vertex_index(vertex, graph)) $(edge_op(graph)) $(vertex_index(n,graph))")
+                    if with_weight != ""
+                        weight = get_edge_property(graph,vertex,n,with_weight)
+                        write(stream," [ label=\"$(weight)\" ]")
+                    end
+                    write(stream, ";\n")
                 end
-                
-                if with_weight != ""
-                    weight = get_edge_property(graph,vertex,n,with_weight)
-                    write(stream," [ label=\"$(weight)\" ]")
-                end
-                write(stream, ";\n")
             end
         end
     else
