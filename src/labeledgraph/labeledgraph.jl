@@ -205,6 +205,7 @@ function to_dot(graph::LabeledGraph, stream::IO, with_weight::ASCIIString="")
         end
     elseif implements_vertex_list(graph) && (implements_incidence_list(graph) || implements_adjacency_list(graph))
         for vertex in vertices(graph)
+	    write(stream,"$(vertex);\n")
             for n in out_neighbors(vertex, graph)
                 if is_directed(graph) || vertex_index(n, graph) > vertex_index(vertex, graph)
                     write(stream,"$(vertex) $(edge_op(graph)) $(n)")
