@@ -67,6 +67,9 @@ module LabeledGraphs
 
         # Multi graph
         MultiGraph,
+        laplacian_matrix,
+        num_arborescence,
+        graph_adjacency,
         
         # graph_visit
         AbstractGraphVisitor, TrivialGraphVisitor, LogGraphVisitor,
