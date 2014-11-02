@@ -64,6 +64,12 @@ module LabeledGraphs
         add_edge_property!,
         set_edge_property!,
         get_edge_property,
+
+        # Multi graph
+        MultiGraph,
+        laplacian_matrix,
+        num_arborescence,
+        graph_adjacency,
         
         # graph_visit
         AbstractGraphVisitor, TrivialGraphVisitor, LogGraphVisitor,
@@ -114,5 +120,7 @@ module LabeledGraphs
 
     
     include("labeledgraph.jl")
+    include("multigraph.jl")
+    
     
 end
