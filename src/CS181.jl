@@ -1,4 +1,5 @@
-module CS181F2014
+
+module CS181
 
 	# Specify definitions to export
 	export

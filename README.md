@@ -1,13 +1,15 @@
-# CS181F2014.jl
+# CS181.jl
 
 This package provides the code base for CS181 students using Julia.
 
 ## Installation
 
 ```julia
-Pkg.clone("https://github.com/ykim27/CS181F2014.jl.git")
+Pkg.clone("https://github.com/ykim27/CS181.jl.git")
 ```
 
 Available subpackages:
 
-- Alignment (CS181F2014.Alignment)
+- Alignment (CS181.Alignment)
+- LabeledGraphs (CS181.LabeledGraphs)
+    -> An adapted, less-efficient implementation of features from Graphs.jl
