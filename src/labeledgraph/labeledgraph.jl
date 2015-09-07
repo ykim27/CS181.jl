@@ -44,7 +44,14 @@ vertices(g::LabeledGraph) = [v for v in keys(g.dictionary)]
 
 vertex_index(v, g::LabeledGraph) = g.dictionary[v]
 
-num_edges(g::LabeledGraph) = countnz(g.adjacency) / 2
+function num_edges(g::LabeledGraph)
+    n = sum(g.adjacency);
+    if is_directed(g)
+        return n
+    else
+        return n / 2
+    end
+end
 
 out_degree(v, g::LabeledGraph) = countnz(g.adjacency[g.dictionary[v],:])
 
