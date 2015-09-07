@@ -114,6 +114,7 @@ module LabeledGraphs
 
         # Graphviz
         to_dot, plot,
+        from_dot,
 
         # Random Graph Generation
         erdos_renyi_graph, watts_strogatz_graph
@@ -121,6 +122,7 @@ module LabeledGraphs
     
     include("labeledgraph.jl")
     include("multigraph.jl")
-    
+    include("dot.jl")
+
     
 end

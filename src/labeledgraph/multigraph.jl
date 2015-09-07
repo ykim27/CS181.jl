@@ -18,6 +18,7 @@ end
 
 @graph_implements MultiGraph vertex_list vertex_map adjacency_list
 
+
 ## required interfaces
 
 is_directed(g::MultiGraph) = g.is_directed
@@ -26,7 +27,7 @@ num_vertices(g::MultiGraph) = length(g.dictionary)
 
 vertices(g::MultiGraph) = [v for v in keys(g.dictionary)]
 
-function vertex_index{V}(v::V, g::MultiGraph{V})
+function vertex_index(v, g::MultiGraph)
     if !haskey(g.dictionary,v)
         return 0;
     end
@@ -42,9 +43,9 @@ function num_edges(g::MultiGraph)
     end
 end
 
-out_degree{V}(v::V, g::MultiGraph{V}) = sum(g.adjacency[g.dictionary[v],:])
+out_degree(v, g::MultiGraph) = sum(g.adjacency[g.dictionary[v],:])
 
-function out_neighbors{V}(v::V, g::MultiGraph{V})
+function out_neighbors(v, g::MultiGraph)
 
     i = g.dictionary[v]
     adjacent_vertices = {}
@@ -88,7 +89,7 @@ end
 
 ## mutation
 
-function add_vertex!{V}(g::MultiGraph{V}, v::V)
+function add_vertex!(g::MultiGraph, v)
 
     if !haskey(g.dictionary,v)
 
@@ -110,7 +111,7 @@ function add_vertex!{V}(g::MultiGraph{V}, v::V)
 
 end
 
-function remove_vertex!{V}(g::MultiGraph, v::V)
+function remove_vertex!(g::MultiGraph, v)
 
     if haskey(g.dictionary,v)
 
@@ -138,7 +139,7 @@ function remove_vertex!{V}(g::MultiGraph, v::V)
 
 end
 
-function add_edge!{V}(g::MultiGraph{V}, u::V, v::V)
+function add_edge!(g::MultiGraph, u, v)
 
     if !haskey(g.dictionary,u)
         add_vertex!(g,u)
@@ -161,7 +162,7 @@ function add_edge!{V}(g::MultiGraph{V}, u::V, v::V)
 
 end
 
-function remove_edge!{V}(g::MultiGraph, u::V, v::V)
+function remove_edge!(g::MultiGraph, u, v)
     if haskey(g.dictionary,u) && haskey(g.dictionary,v)
 
         p = g.dictionary[u]
@@ -181,12 +182,12 @@ function remove_edge!{V}(g::MultiGraph, u::V, v::V)
 
 end
 
-function add_edge_property!{T}(g::LabeledGraph, prop_name::ASCIIString, value_type::Type{T})
+function add_edge_property!{T}(g::LabeledGraph, prop_name::String, value_type::Type{T})
     sz = size(g.adjacency);
     g.edge_properties[prop_name] = zeros(value_type, sz[1], sz[2])
 end
 
-function get_edge_property{V}(g::LabeledGraph{V}, x::V, y::V, key::ASCIIString)
+function get_edge_property(g::LabeledGraph, x, y, key::String)
     if haskey(g.edge_properties, key)
         g.edge_properties[key][g.dictionary[x], g.dictionary[y]]
     else
@@ -194,7 +195,7 @@ function get_edge_property{V}(g::LabeledGraph{V}, x::V, y::V, key::ASCIIString)
     end
 end
 
-function set_edge_property!{V,T}(g::LabeledGraph, u::V, v::V, prop_name::ASCIIString, val::T)
+function set_edge_property!(g::LabeledGraph, u, v, prop_name::String, val)
 
     p = g.dictionary[u]
     q = g.dictionary[v]
