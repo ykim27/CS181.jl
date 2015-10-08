@@ -64,7 +64,7 @@ function from_dot(stream::IO, label_type::DataType=String)
         # m=match(r"(\w+)?\s+?--?\s+?(\w+)",line)
         from = m.captures[1];
         to = m.captures[2];
-	weight = m.captures[3];
+	weight = m.captures[4];
 	if label_type <: Number
 	   weight = parse(weight);
 	end
