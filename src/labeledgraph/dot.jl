@@ -59,7 +59,7 @@ function from_dot(stream::IO, label_type::DataType=String)
         if(line[1] == '}')
             continue;
         end
-	m=match(r"([\w\d.]+)?\s*--\s*?([\w\d.]+)(\s*\[\s*label\s*=\s*\"(.*?)\"\s*\])?",line)
+	m=match(r"([\w\d.,\(\)]+)?\s*--\s*?([\w\d.,\(\)]+)(\s*\[\s*label\s*=\s*\"(.*?)\"\s*\])?",line)
 	# old regex
         # m=match(r"(\w+)?\s+?--?\s+?(\w+)",line)
         from = m.captures[1];
