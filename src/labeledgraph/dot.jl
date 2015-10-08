@@ -41,9 +41,10 @@ function edge_op(graph::AbstractGraph)
     is_directed(graph) ? "->" : "--"
 end
 
-# Parse a LabeledGraph from a DOT stream. (edge labels not implemented.)
+# Parse a LabeledGraph from a DOT stream.
 function from_dot(stream::IO)
     graph = LabeledGraph{String}(false);
+    add_edge_property!(graph,"WEIGHT",Float64);
 
     in_graph = false;
     for line in eachline(stream)
@@ -58,10 +59,14 @@ function from_dot(stream::IO)
         if(line[1] == '}')
             continue;
         end
-        m=match(r"(\w+)?\s+?--?\s+?(\w+)",line)
+	m=match(r"(\w+)?\s+?--?\s+?(\w+)\s*\[\s*label\s*=\s*\"(.*?)\"\s*\]",line)
+	# old regex
+        # m=match(r"(\w+)?\s+?--?\s+?(\w+)",line)
         from = m.captures[1];
         to = m.captures[2];
+	weight = m.captures[3];
         add_edge!(graph,from,to);
+	set_edge_property!(graph,from,to,"WEIGHT",weight);
     end
 
     return graph;
