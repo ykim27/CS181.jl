@@ -42,7 +42,7 @@ function edge_op(graph::AbstractGraph)
 end
 
 # Parse a LabeledGraph from a DOT stream.
-function from_dot(stream::IO)
+function from_dot(stream::IO, label_type:DataType=String)
     graph = LabeledGraph{String}(false);
     add_edge_property!(graph,"WEIGHT",Float64);
 
@@ -65,6 +65,8 @@ function from_dot(stream::IO)
         from = m.captures[1];
         to = m.captures[2];
 	weight = m.captures[3];
+	if label_type <: Number
+	   weight = parse(weight);
         add_edge!(graph,from,to);
 	set_edge_property!(graph,from,to,"WEIGHT",weight);
     end
