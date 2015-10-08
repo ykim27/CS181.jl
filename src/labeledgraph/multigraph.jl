@@ -182,12 +182,12 @@ function remove_edge!(g::MultiGraph, u, v)
 
 end
 
-function add_edge_property!{T}(g::LabeledGraph, prop_name::String, value_type::Type{T})
+function add_edge_property!{T}(g::MultiGraph, prop_name::String, value_type::Type{T})
     sz = size(g.adjacency);
     g.edge_properties[prop_name] = zeros(value_type, sz[1], sz[2])
 end
 
-function get_edge_property(g::LabeledGraph, x, y, key::String)
+function get_edge_property(g::MultiGraph, x, y, key::String)
     if haskey(g.edge_properties, key)
         g.edge_properties[key][g.dictionary[x], g.dictionary[y]]
     else
@@ -195,7 +195,7 @@ function get_edge_property(g::LabeledGraph, x, y, key::String)
     end
 end
 
-function set_edge_property!(g::LabeledGraph, u, v, prop_name::String, val)
+function set_edge_property!(g::MultiGraph, u, v, prop_name::String, val)
 
     p = g.dictionary[u]
     q = g.dictionary[v]
