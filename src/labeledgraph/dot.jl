@@ -8,7 +8,7 @@ function to_dot(graph::LabeledGraph, stream::IO, with_weight::String="")
     write(stream, "$(graph_type_string(graph)) graphname {\n")
     if implements_edge_list(graph)
         for edge in edges(graph)
-            write(stream,"$(vertex_index(source(edge), graph)) $(edge_op(graph)) $(vertex_index(target(edge), graph))\n")
+            write(stream,"\"$(vertex_index(source(edge), graph))\" $(edge_op(graph)) \"$(vertex_index(target(edge), graph))\"\n")
         end
     elseif implements_vertex_list(graph) && (implements_incidence_list(graph) || implements_adjacency_list(graph))
         for vertex in vertices(graph)
