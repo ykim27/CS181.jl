@@ -13,11 +13,11 @@ function to_dot(graph::LabeledGraph, stream::IO, with_weight::String="")
     elseif implements_vertex_list(graph) && (implements_incidence_list(graph) || implements_adjacency_list(graph))
         for vertex in vertices(graph)
 	    if out_degree(vertex,graph) == 0
-	        write(stream,"$(vertex);\n")
+	        write(stream,"\"$(vertex)\";\n")
 	    end
             for n in out_neighbors(vertex, graph)
                 if is_directed(graph) || vertex_index(n, graph) > vertex_index(vertex, graph)
-                    write(stream,"$(vertex) $(edge_op(graph)) $(n)")
+                    write(stream,"\"$(vertex)\" $(edge_op(graph)) \"$(n)\"")
                     if with_weight != ""
                         weight = get_edge_property(graph,vertex,n,with_weight)
                         write(stream," [ label=\"$(weight)\" ]")
@@ -59,7 +59,7 @@ function from_dot(stream::IO, label_type::DataType=String)
         if(line[1] == '}')
             continue;
         end
-	m=match(r"([\w\d.,\(\)]+)?\s*--\s*?([\w\d.,\(\)]+)(\s*\[\s*label\s*=\s*\"(.*?)\"\s*\])?",line)
+	m=match(r"\"([\w\d.,\(\)]+)\"?\s*--\s*?\"([\"\w\d.,\(\)]+)\"(\s*\[\s*label\s*=\s*\"(.*?)\"\s*\])?",line)
 	# old regex
         # m=match(r"(\w+)?\s+?--?\s+?(\w+)",line)
         from = m.captures[1];
