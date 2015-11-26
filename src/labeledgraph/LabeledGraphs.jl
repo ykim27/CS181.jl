@@ -70,6 +70,7 @@ module LabeledGraphs
         laplacian_matrix,
         num_arborescence,
         graph_adjacency,
+	edge_multiplicity,
         
         # graph_visit
         AbstractGraphVisitor, TrivialGraphVisitor, LogGraphVisitor,
