@@ -27,7 +27,7 @@ num_vertices(g::MultiGraph) = length(g.dictionary)
 
 vertices(g::MultiGraph) = [v for v in keys(g.dictionary)]
 
-function vertex_index(g::MultiGraph, v)
+function vertex_index(v, g::MultiGraph)
     if !haskey(g.dictionary,v)
         return 0;
     end
@@ -43,9 +43,9 @@ function num_edges(g::MultiGraph)
     end
 end
 
-out_degree(g::MultiGraph, v) = sum(g.adjacency[g.dictionary[v],:])
+out_degree(v, g::MultiGraph) = sum(g.adjacency[g.dictionary[v],:])
 
-function out_neighbors(g::MultiGraph, v)
+function out_neighbors(v, g::MultiGraph)
 
     i = g.dictionary[v]
     adjacent_vertices = {}
@@ -60,9 +60,9 @@ function out_neighbors(g::MultiGraph, v)
 
 end
 
-in_degree(g::MultiGraph, v) = sum(g.adjacency[:,g.dictionary[v]])
+in_degree(v, g::MultiGraph) = sum(g.adjacency[:,g.dictionary[v]])
 
-function in_neighbors(g::MultiGraph, v)
+function in_neighbors(v, g::MultiGraph)
     i = g.dictionary[v]
     adjacent_vertices = {}
 
@@ -91,13 +91,20 @@ function laplacian_matrix(g::MultiGraph)
     return L;
 end
 
-function num_arborescence(g::MultiGraph)
+function num_arborescence(g::MultiGraph, v)
+    if !haskey(g.dictionary,v)
+       return 0
+    end
+    
     L = laplacian_matrix(g);
-    (r,c) = size(L);
-    return abs(det(L[1:r-1,1:c-1]));
+    
+    i = g.dictionary[v]
+    submatrix = [ X[1:i-1,1:i-1] X[1:i-1,i+1:end];
+                  X[i+1:end,1:i-1] X[i+1:end,i+1:end] ];
+    return abs(det(submatrix));
 end
 
-function edge_multiplicity(g::MultiGraph,v,w)
+function edge_multiplicity(v, w, g::MultiGraph)
     if !haskey(g.dictionary,v)
        return 0
     end
