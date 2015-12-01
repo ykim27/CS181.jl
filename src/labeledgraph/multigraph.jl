@@ -99,8 +99,8 @@ function num_arborescence(g::MultiGraph, v)
     L = laplacian_matrix(g);
     
     i = g.dictionary[v]
-    submatrix = [ X[1:i-1,1:i-1] X[1:i-1,i+1:end];
-                  X[i+1:end,1:i-1] X[i+1:end,i+1:end] ];
+    submatrix = [ L[1:i-1,1:i-1] L[1:i-1,i+1:end];
+                  L[i+1:end,1:i-1] L[i+1:end,i+1:end] ];
     return abs(det(submatrix));
 end
 
