@@ -4,7 +4,7 @@
 function to_dot(graph::LabeledGraph, stream::IO, with_weight::String="")
     has_vertex_attrs = method_exists(attributes, (vertex_type(graph), LabeledGraph))
     has_edge_attrs = method_exists(attributes, (edge_type(graph), LabeledGraph))
-    
+
     write(stream, "$(graph_type_string(graph)) graphname {\n")
     if implements_edge_list(graph)
         for edge in edges(graph)
@@ -23,6 +23,42 @@ function to_dot(graph::LabeledGraph, stream::IO, with_weight::String="")
                         write(stream," [ label=\"$(weight)\" ]")
                     end
                     write(stream, ";\n")
+                end
+            end
+        end
+    else
+        throw(ArgumentError("More graph Concepts needed: dot serialization requires iteration over edges or iteration over vertices and neighbors."))
+    end
+    write(stream, "}\n")
+    stream
+end
+
+# Write the dot representation of a graph to a stream.
+# Temporary solution for CS181. TODO: clean this up.
+function to_dot(graph::MultiGraph, stream::IO, with_weight::String="")
+    has_vertex_attrs = method_exists(attributes, (vertex_type(graph), MultiGraph))
+    has_edge_attrs = method_exists(attributes, (edge_type(graph), MultiGraph))
+
+    write(stream, "$(graph_type_string(graph)) graphname {\n")
+    if implements_edge_list(graph)
+        for edge in edges(graph)
+            write(stream,"\"$(vertex_index(source(edge), graph))\" $(edge_op(graph)) \"$(vertex_index(target(edge), graph))\"\n")
+        end
+    elseif implements_vertex_list(graph) && (implements_incidence_list(graph) || implements_adjacency_list(graph))
+        for vertex in vertices(graph)
+	    if out_degree(vertex,graph) == 0
+	        write(stream,"\"$(vertex)\";\n")
+	    end
+            for n in out_neighbors(vertex, graph)
+                if is_directed(graph) || vertex_index(n, graph) > vertex_index(vertex, graph)
+                    for i = 1:edge_multiplicity(vertex,n,graph)
+                        write(stream,"\"$(vertex)\" $(edge_op(graph)) \"$(n)\"")
+                        if with_weight != ""
+                            weight = get_edge_property(graph,vertex,n,with_weight)
+                            write(stream," [ label=\"$(weight)\" ]")
+                        end
+                        write(stream, ";\n")
+                    end
                 end
             end
         end
