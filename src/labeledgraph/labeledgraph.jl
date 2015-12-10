@@ -11,9 +11,10 @@ type LabeledGraph{V} <: AbstractGraph{V, Vector{V}}
     dictionary :: Dict{V,Int}
     adjacency :: Array{Int,2}
     edge_properties :: Dict{String, Array}
-    
-    LabeledGraph(is_directed :: Bool, dictionary :: Dict) = new(is_directed, dictionary, Array(Int, (0,0)), Dict())
-    LabeledGraph(is_directed :: Bool) = new(is_directed, Dict(), Array(Int, (0,0)), Dict())
+    edge_property_default :: Dict{String, Any}
+
+    LabeledGraph(is_directed :: Bool, dictionary :: Dict) = new(is_directed, dictionary, Array(Int, (0,0)), Dict{String,Array}(), Dict{String,Any}())
+    LabeledGraph(is_directed :: Bool) = new(is_directed, Dict(), Array(Int, (0,0)), Dict{String,Array}(), Dict{String,Any}())
 end
 
 @graph_implements LabeledGraph vertex_list vertex_map adjacency_list
@@ -83,8 +84,9 @@ function add_vertex!(g::LabeledGraph, v)
                     zeros(1,m)  zeros(1,1)]
         for key in keys(g.edge_properties)
             prop = g.edge_properties[key]
-            g.edge_properties[key] = [prop zeros(m,1);
-                                    zeros(1,m)  zeros(1,1)]
+            default_val = g.edge_property_default[key]
+            g.edge_properties[key] = [prop fill(default_val,m,1);
+                                    fill(default_val,1,m)  fill(default_val,1,1)]
         end
         g.dictionary[v] = n+1
 
@@ -165,9 +167,18 @@ function remove_edge!(g::LabeledGraph, u, v)
 
 end
 
-function add_edge_property!{T}(g::LabeledGraph, prop_name::String, value_type::Type{T})
+function add_edge_property!{T<:Number}(g::LabeledGraph, prop_name::String, value_type::Type{T})
+    add_edge_property!(g,prop_name,value_type,0);
+end
+
+function add_edge_property!{T<:String}(g::LabeledGraph, prop_name::String, value_type::Type{T})
+    add_edge_property!(g,prop_name,value_type,"");
+end
+
+function add_edge_property!{T}(g::LabeledGraph, prop_name::String, value_type::Type{T}, default_val = Nothing())
     sz = size(g.adjacency);
-    g.edge_properties[prop_name] = zeros(value_type, sz[1], sz[2])
+    g.edge_properties[prop_name] = fill(default_val, sz[1], sz[2]);
+    g.edge_property_default[prop_name] = default_val;
 end
 
 function get_edge_property(g::LabeledGraph, x, y, key::String)
@@ -182,13 +193,13 @@ function set_edge_property!(g::LabeledGraph, u, v, prop_name::String, val)
 
     p = g.dictionary[u]
     q = g.dictionary[v]
-    
+
     if haskey(g.edge_properties, prop_name)
         prop = g.edge_properties[prop_name]
     else
         throw(ArgumentError("Edge property \"$(key)\" does not exist."))
     end
-    
+
     if g.is_directed
         prop[p,q] = val
     else
