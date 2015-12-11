@@ -168,11 +168,11 @@ function remove_edge!(g::LabeledGraph, u, v)
 end
 
 function add_edge_property!{T<:Number}(g::LabeledGraph, prop_name::String, value_type::Type{T})
-    add_edge_property!(g,prop_name,value_type,0);
+    add_edge_property!(g,prop_name,value_type,convert(value_type,0));
 end
 
 function add_edge_property!{T<:String}(g::LabeledGraph, prop_name::String, value_type::Type{T})
-    add_edge_property!(g,prop_name,value_type,"");
+    add_edge_property!(g,prop_name,value_type,convert(value_type,""));
 end
 
 function add_edge_property!{T}(g::LabeledGraph, prop_name::String, value_type::Type{T}, default_val = Nothing())
