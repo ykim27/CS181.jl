@@ -10,10 +10,11 @@ type MultiGraph{V} <: AbstractGraph{V, Vector{V}}
     is_directed :: Bool
     dictionary :: Dict{V,Int}
     adjacency :: Array{Int,2}
-    edge_properties :: Dict{ASCIIString, Array}
+    edge_properties :: Dict{String, Array}
+    edge_property_default :: Dict{String,Any}
     
-    MultiGraph(is_directed :: Bool, dictionary :: Dict) = new(is_directed, dictionary, Array(Int, (0,0)), Dict())
-    MultiGraph(is_directed :: Bool) = new(is_directed, Dict(), Array(Int, (0,0)), Dict())
+    MultiGraph(is_directed :: Bool, dictionary :: Dict) = new(is_directed, dictionary, Array(Int, (0,0)), Dict{String,Array}(), Dict{String,Any}())
+    MultiGraph(is_directed :: Bool) = new(is_directed, Dict(), Array(Int, (0,0)), Dict{String,Array}(), Dict{String,Any}())
 end
 
 @graph_implements MultiGraph vertex_list vertex_map adjacency_list
@@ -133,8 +134,9 @@ function add_vertex!(g::MultiGraph, v)
                     zeros(1,m)  zeros(1,1)]
         for key in keys(g.edge_properties)
             prop = g.edge_properties[key]
-            g.edge_properties[key] = [prop zeros(m,1);
-                                    zeros(1,m)  zeros(1,1)]
+	    default_val = g.edge_property_default[key]
+            g.edge_properties[key] = [prop fill(default_val,m,1);
+                                    fill(default_val,1,m)  fill(default_val,1,1)]
         end
         g.dictionary[v] = n+1
 
@@ -215,9 +217,19 @@ function remove_edge!(g::MultiGraph, u, v)
 
 end
 
-function add_edge_property!{T}(g::MultiGraph, prop_name::String, value_type::Type{T})
+
+function add_edge_property!{T<:Number}(g::MultiGraph, prop_name::String, value_type::Type{T})
+    add_edge_property!(g,prop_name,value_type,convert(value_type,0));
+end
+
+function add_edge_property!{T<:String}(g::MultiGraph, prop_name::String, value_type::Type{T})
+    add_edge_property!(g,prop_name,value_type,convert(value_type,""));
+end
+
+function add_edge_property!{T}(g::MultiGraph, prop_name::String, value_type::Type{T}, default_val = Nothing())
     sz = size(g.adjacency);
-    g.edge_properties[prop_name] = zeros(value_type, sz[1], sz[2])
+    g.edge_properties[prop_name] = fill(default_val, sz[1], sz[2]);
+    g.edge_property_default[prop_name] = default_val;
 end
 
 function get_edge_property(g::MultiGraph, x, y, key::String)
